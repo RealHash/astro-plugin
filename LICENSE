@@ -1,21 +1,25 @@
-MIT License
+Copyright (c) 2026 Francisco Wyler. All rights reserved.
 
-Copyright (c) 2026
+This repository and all source code, assets, documentation, designs, and related
+materials (the "Work") are proprietary and protected by applicable copyright and
+other intellectual property laws.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+No permission is granted to use, copy, modify, merge, publish, distribute,
+sublicense, sell, create derivative works from, reverse engineer, or otherwise
+exploit any part of the Work, except with prior express written authorization
+from Francisco Wyler.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Access to this repository does not grant any license or other right in or to the
+Work, whether by implication, estoppel, or otherwise.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The Work is provided "AS IS", without warranty of any kind, express or implied,
+including but not limited to the warranties of merchantability, fitness for a
+particular purpose, title, and non-infringement. To the maximum extent permitted
+by applicable law, in no event shall Francisco Wyler or any contributor be liable for
+any claim, damages, or other liability, whether in an action of contract, tort,
+or otherwise, arising from, out of, or in connection with the Work or the use or
+other dealings in the Work.
+
+For licensing inquiries, permissions, or other intellectual property matters,
+contact the repository owner or the contact identified in the applicable product
+or marketplace listing.

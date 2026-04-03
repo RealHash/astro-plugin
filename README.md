@@ -33,6 +33,9 @@ Las implicancias y el plan de evolución están documentados en [`docs/architect
 ├── .gitignore
 ├── LICENSE
 ├── README.md
+├── legal
+│   ├── privacy-policy.html
+│   └── terms-of-service.html
 ├── package.json
 ├── scripts
 │   └── sync-catalog.mjs
@@ -217,6 +220,19 @@ Más detalle:
 - [`docs/repo-operations.md`](docs/repo-operations.md)
 - [`docs/team-workflow.md`](docs/team-workflow.md)
 - [`docs/release-checklist.md`](docs/release-checklist.md)
+
+## Legal base
+
+Se agregaron dos páginas legales base para usar como punto de partida:
+
+- [`legal/privacy-policy.html`](/Users/pancho/Documents/Proyectos%20desarrollo/astro-plugin/legal/privacy-policy.html#L1)
+- [`legal/terms-of-service.html`](/Users/pancho/Documents/Proyectos%20desarrollo/astro-plugin/legal/terms-of-service.html#L1)
+
+Importante:
+
+- para Google Workspace Marketplace necesitás URLs públicas accesibles por Google y por los usuarios;
+- si el repo sigue privado, estos archivos sirven como base de contenido, pero no como URL final del listing;
+- el texto incluye limitación de responsabilidad fuerte, pero no reemplaza revisión legal.
 
 ## UX actual
 
