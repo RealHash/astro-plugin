@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?!= include('Sidebar.css.html'); ?>
+  </head>
+  <body data-theme="light">
+    <div class="app-shell">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">Google Docs</p>
+          <h1 class="app-title">Astro Symbols</h1>
+          <p class="app-subtitle">Astrological glyph insertion for collaborative docs.</p>
+        </div>
+        <div class="locale-badge" id="localeBadge">ES</div>
+      </header>
+
+      <section class="toolbar-card">
+        <label class="search-field" for="searchInput">
+          <span class="search-prefix">⌕</span>
+          <input id="searchInput" type="search" autocomplete="off">
+        </label>
+
+        <div class="filter-bar" role="tablist" aria-label="Catalog filters">
+          <button class="filter-chip is-active" id="filterAll" type="button" data-filter-mode="all">All</button>
+          <button class="filter-chip" id="filterFavorites" type="button" data-filter-mode="favorites">Favorites</button>
+          <button class="filter-chip" id="filterStandard" type="button" data-filter-mode="standard">Standard</button>
+        </div>
+
+        <div class="settings-grid">
+          <label class="field">
+            <span class="field-label" id="spaceModeLabel">Inserción</span>
+            <select id="spaceModeSelect">
+              <option value="none">Solo símbolo</option>
+              <option value="wrap">Con espacios</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="field-label" id="presentationModeLabel">Presentación</span>
+            <select id="presentationModeSelect">
+              <option value="auto">Auto</option>
+              <option value="text">Texto</option>
+              <option value="emoji">Emoji</option>
+            </select>
+          </label>
+
+          <label class="toggle">
+            <input id="fontToggle" type="checkbox">
+            <span id="fontToggleLabel">Intentar Noto Sans Symbols 2</span>
+          </label>
+        </div>
+
+        <p class="helper-copy" id="presentationHelperText"></p>
+        <p class="helper-copy" id="fontHelperText"></p>
+      </section>
+
+      <div class="status-bar is-hidden" id="statusBar" role="status" aria-live="polite"></div>
+
+      <main class="catalog-root" id="catalogRoot">
+        <div class="empty-state" id="loadingState">Cargando catálogo astrológico...</div>
+      </main>
+    </div>
+
+    <?!= include('Sidebar.js.html'); ?>
+  </body>
+</html>

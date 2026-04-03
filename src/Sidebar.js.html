@@ -1,0 +1,493 @@
+<script>
+(function () {
+  var state = {
+    bootstrap: null,
+    collapsedSections: {},
+    filterMode: 'all'
+  };
+  var statusTimer = null;
+
+  document.addEventListener('DOMContentLoaded', function () {
+    bindEvents();
+    loadBootstrap();
+  });
+
+  function bindEvents() {
+    document.getElementById('searchInput').addEventListener('input', renderCatalog);
+    document.getElementById('spaceModeSelect').addEventListener('change', persistPreferences);
+    document.getElementById('presentationModeSelect').addEventListener('change', persistPreferences);
+    document.getElementById('fontToggle').addEventListener('change', persistPreferences);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-filter-mode]'), function (button) {
+      button.addEventListener('click', function () {
+        state.filterMode = button.getAttribute('data-filter-mode');
+        updateFilterChips();
+        renderCatalog();
+      });
+    });
+  }
+
+  function loadBootstrap() {
+    google.script.run
+      .withSuccessHandler(initializeApp)
+      .withFailureHandler(handleServerFailure)
+      .getSidebarBootstrap(navigator.language || 'es');
+  }
+
+  function initializeApp(bootstrap) {
+    state.bootstrap = bootstrap;
+    applyStrings();
+    applyPreferences();
+    renderCatalog();
+  }
+
+  function applyStrings() {
+    var strings = state.bootstrap.strings;
+
+    document.getElementById('loadingState').textContent = strings.sidebar.loading;
+    document.getElementById('searchInput').placeholder = strings.sidebar.searchPlaceholder;
+    document.getElementById('spaceModeLabel').textContent = strings.sidebar.spaceMode;
+    document.getElementById('presentationModeLabel').textContent = strings.sidebar.presentationMode;
+    document.getElementById('presentationHelperText').textContent = strings.sidebar.presentationHelper;
+    document.getElementById('fontToggleLabel').textContent = strings.sidebar.fontToggle;
+    document.getElementById('fontHelperText').textContent = strings.sidebar.fontHelper;
+    document.getElementById('localeBadge').textContent = strings.sidebar.localeBadge;
+    document.getElementById('filterAll').textContent = strings.sidebar.filterAll;
+    document.getElementById('filterFavorites').textContent = strings.sidebar.filterFavorites;
+    document.getElementById('filterStandard').textContent = strings.sidebar.filterStandard;
+
+    var spaceModeSelect = document.getElementById('spaceModeSelect');
+    spaceModeSelect.querySelector('option[value="none"]').textContent = strings.sidebar.insertOnly;
+    spaceModeSelect.querySelector('option[value="wrap"]').textContent = strings.sidebar.insertWrapped;
+
+    var presentationModeSelect = document.getElementById('presentationModeSelect');
+    presentationModeSelect.querySelector('option[value="auto"]').textContent = strings.sidebar.presentationAuto;
+    presentationModeSelect.querySelector('option[value="text"]').textContent = strings.sidebar.presentationText;
+    presentationModeSelect.querySelector('option[value="emoji"]').textContent = strings.sidebar.presentationEmoji;
+    updateFilterChips();
+  }
+
+  function applyPreferences() {
+    var preferences = state.bootstrap.preferences;
+
+    document.getElementById('spaceModeSelect').value = preferences.spaceMode;
+    document.getElementById('presentationModeSelect').value = preferences.presentationMode;
+    document.getElementById('fontToggle').checked = Boolean(preferences.applyPreferredFont);
+  }
+
+  function persistPreferences() {
+    var payload = {
+      spaceMode: document.getElementById('spaceModeSelect').value,
+      presentationMode: document.getElementById('presentationModeSelect').value,
+      applyPreferredFont: document.getElementById('fontToggle').checked
+    };
+
+    google.script.run
+      .withSuccessHandler(function (preferences) {
+        syncPreferences(preferences);
+      })
+      .withFailureHandler(handleServerFailure)
+      .saveUserPreferencesFromSidebar(payload);
+  }
+
+  function renderCatalog() {
+    if (!state.bootstrap) {
+      return;
+    }
+
+    var strings = state.bootstrap.strings;
+    var catalogRoot = document.getElementById('catalogRoot');
+    var query = normalizeText(document.getElementById('searchInput').value);
+    var sections = buildSections()
+      .map(function (section) {
+        var items = section.items.filter(function (item) {
+          return (!query || item.searchText.indexOf(query) > -1) && matchesFilter(item);
+        });
+
+        return {
+          key: section.key,
+          label: section.label,
+          items: items,
+          dynamic: section.dynamic
+        };
+      })
+      .filter(function (section) {
+        return section.items.length > 0;
+      });
+
+    if (!sections.length) {
+      catalogRoot.innerHTML = '<div class="empty-state">' + escapeHtml(strings.sidebar.noResults) + '</div>';
+      return;
+    }
+
+    catalogRoot.innerHTML = sections.map(renderSection).join('');
+    bindSectionEvents();
+    bindSymbolEvents();
+  }
+
+  function renderSection(section) {
+    var collapsedClass = state.collapsedSections[section.key] ? ' is-collapsed' : '';
+
+    return [
+      '<section class="section-card' + collapsedClass + '" data-section-key="' + escapeHtml(section.key) + '">',
+      '  <button class="section-toggle" type="button" data-toggle-section="' + escapeHtml(section.key) + '">',
+      '    <span class="section-heading">',
+      '      <span class="section-title">' + escapeHtml(section.label) + '</span>',
+      '      <span class="section-count">' + section.items.length + '</span>',
+      '    </span>',
+      '    <span class="section-chevron">▾</span>',
+      '  </button>',
+      '  <div class="section-content">',
+      section.items.map(renderItem).join(''),
+      '  </div>',
+      '</section>'
+    ].join('');
+  }
+
+  function renderItem(item) {
+    var strings = state.bootstrap.strings;
+    var favoriteLabel = item.isFavorite ? strings.sidebar.favoriteRemove : strings.sidebar.favoriteAdd;
+    var favoriteGlyph = item.isFavorite ? '★' : '☆';
+    var favoriteClass = item.isFavorite ? ' is-active' : '';
+    var title = buildItemTitle(item);
+
+    return [
+      '<div class="symbol-card" data-symbol-card="' + escapeHtml(item.id) + '">',
+      '  <button class="symbol-action" type="button" title="' + escapeHtml(title) + '" data-insert-symbol="' + escapeHtml(item.id) + '">',
+      '    <span class="symbol-glyph">' + escapeHtml(item.symbol) + '</span>',
+      '    <span class="symbol-meta">',
+      '      <span class="symbol-label">' + escapeHtml(item.label) + '</span>',
+      '      <span class="symbol-category">' + escapeHtml(item.categoryLabel) + '</span>',
+      renderBadges(item),
+      renderNote(item),
+      '    </span>',
+      '  </button>',
+      '  <button class="favorite-action' + favoriteClass + '" type="button" title="' + escapeHtml(favoriteLabel) + '" aria-label="' + escapeHtml(favoriteLabel) + '" data-favorite-symbol="' + escapeHtml(item.id) + '">' + favoriteGlyph + '</button>',
+      '  <button class="copy-action" type="button" data-copy-symbol="' + escapeHtml(item.id) + '">' + escapeHtml(strings.sidebar.copy) + '</button>',
+      '</div>'
+    ].join('');
+  }
+
+  function bindSectionEvents() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-toggle-section]'), function (button) {
+      button.addEventListener('click', function () {
+        var sectionKey = button.getAttribute('data-toggle-section');
+        state.collapsedSections[sectionKey] = !state.collapsedSections[sectionKey];
+        renderCatalog();
+      });
+    });
+  }
+
+  function updateFilterChips() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-filter-mode]'), function (button) {
+      var isActive = button.getAttribute('data-filter-mode') === state.filterMode;
+      button.classList.toggle('is-active', isActive);
+      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+  }
+
+  function bindSymbolEvents() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-insert-symbol]'), function (button) {
+      button.addEventListener('click', function () {
+        var symbolId = button.getAttribute('data-insert-symbol');
+        insertSymbol(symbolId, button);
+      });
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('[data-copy-symbol]'), function (button) {
+      button.addEventListener('click', function () {
+        var symbolId = button.getAttribute('data-copy-symbol');
+        copySymbol(symbolId);
+      });
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('[data-favorite-symbol]'), function (button) {
+      button.addEventListener('click', function () {
+        var symbolId = button.getAttribute('data-favorite-symbol');
+        toggleFavorite(symbolId, button);
+      });
+    });
+  }
+
+  function insertSymbol(symbolId, button) {
+    var payload = {
+      symbolId: symbolId,
+      locale: state.bootstrap.locale,
+      spaceMode: document.getElementById('spaceModeSelect').value,
+      presentationMode: document.getElementById('presentationModeSelect').value,
+      applyPreferredFont: document.getElementById('fontToggle').checked,
+      source: 'sidebar'
+    };
+
+    button.classList.add('is-working');
+
+    google.script.run
+      .withSuccessHandler(function (result) {
+        button.classList.remove('is-working');
+
+        if (!result || !result.ok) {
+          showStatus(result && result.message ? result.message : state.bootstrap.strings.errors.unexpected, 'error');
+          return;
+        }
+
+        if (result.preferences) {
+          syncPreferences(result.preferences);
+          renderCatalog();
+        }
+
+        pulseCard(symbolId);
+        showStatus(result.message, 'success');
+      })
+      .withFailureHandler(function (error) {
+        button.classList.remove('is-working');
+        handleServerFailure(error);
+      })
+      .insertSymbolFromSidebar(payload);
+  }
+
+  function toggleFavorite(symbolId, button) {
+    var item = findItem(symbolId);
+    var shouldFavorite = !item || !item.isFavorite;
+
+    button.disabled = true;
+
+    google.script.run
+      .withSuccessHandler(function (result) {
+        button.disabled = false;
+
+        if (!result || !result.ok) {
+          showStatus(result && result.message ? result.message : state.bootstrap.strings.errors.unexpected, 'error');
+          return;
+        }
+
+        if (result.preferences) {
+          syncPreferences(result.preferences);
+          renderCatalog();
+        }
+
+        showStatus(result.message, 'info');
+      })
+      .withFailureHandler(function (error) {
+        button.disabled = false;
+        handleServerFailure(error);
+      })
+      .setFavoriteSymbolFromSidebar({
+        symbolId: symbolId,
+        isFavorite: shouldFavorite,
+        locale: state.bootstrap.locale
+      });
+  }
+
+  function copySymbol(symbolId) {
+    var item = findItem(symbolId);
+
+    if (!item) {
+      showStatus(state.bootstrap.strings.errors.symbolNotFound, 'error');
+      return;
+    }
+
+    copyText(formatSymbolForClipboard(item.symbol))
+      .then(function () {
+        showStatus(state.bootstrap.strings.sidebar.copied, 'info');
+      })
+      .catch(function () {
+        showStatus(state.bootstrap.strings.sidebar.copyFailed, 'error');
+      });
+  }
+
+  function buildSections() {
+    var itemsById = state.bootstrap.catalog.items.reduce(function (accumulator, item) {
+      accumulator[item.id] = item;
+      return accumulator;
+    }, {});
+    var sections = [];
+    var favorites = state.bootstrap.preferences.favorites || [];
+    var recentSymbolIds = state.bootstrap.preferences.recentSymbolIds || [];
+
+    if (favorites.length) {
+      sections.push({
+        key: 'favorites',
+        label: state.bootstrap.strings.sidebar.favorites,
+        items: favorites.map(function (symbolId) {
+          return itemsById[symbolId];
+        }).filter(Boolean),
+        dynamic: true
+      });
+    }
+
+    if (recentSymbolIds.length) {
+      sections.push({
+        key: 'recent',
+        label: state.bootstrap.strings.sidebar.recents,
+        items: recentSymbolIds.map(function (symbolId) {
+          return itemsById[symbolId];
+        }).filter(Boolean),
+        dynamic: true
+      });
+    }
+
+    state.bootstrap.catalog.staticSections.forEach(function (section) {
+      sections.push({
+        key: section.key,
+        label: section.label,
+        dynamic: false,
+        items: state.bootstrap.catalog.items.filter(function (item) {
+          return item.categoryKey === section.key;
+        })
+      });
+    });
+
+    return sections;
+  }
+
+  function matchesFilter(item) {
+    if (state.filterMode === 'favorites') {
+      return item.isFavorite;
+    }
+
+    if (state.filterMode === 'standard') {
+      return item.standard;
+    }
+
+    return true;
+  }
+
+  function syncPreferences(partialPreferences) {
+    state.bootstrap.preferences = Object.assign({}, state.bootstrap.preferences, partialPreferences);
+    state.bootstrap.catalog.items = state.bootstrap.catalog.items.map(function (item) {
+      return Object.assign({}, item, {
+        isFavorite: state.bootstrap.preferences.favorites.indexOf(item.id) > -1
+      });
+    });
+  }
+
+  function pulseCard(symbolId) {
+    var card = document.querySelector('[data-symbol-card="' + symbolId + '"]');
+
+    if (!card) {
+      return;
+    }
+
+    card.classList.add('is-success');
+    window.setTimeout(function () {
+      card.classList.remove('is-success');
+    }, 900);
+  }
+
+  function showStatus(message, type) {
+    var statusBar = document.getElementById('statusBar');
+
+    statusBar.textContent = message;
+    statusBar.className = 'status-bar status-' + type;
+
+    if (statusTimer) {
+      window.clearTimeout(statusTimer);
+    }
+
+    statusTimer = window.setTimeout(function () {
+      statusBar.className = 'status-bar is-hidden';
+      statusBar.textContent = '';
+    }, 5000);
+  }
+
+  function handleServerFailure(error) {
+    console.error(error);
+    showStatus(state.bootstrap ? state.bootstrap.strings.errors.unexpected : 'Unexpected error.', 'error');
+  }
+
+  function findItem(symbolId) {
+    return state.bootstrap.catalog.items.find(function (item) {
+      return item.id === symbolId;
+    });
+  }
+
+  function renderBadges(item) {
+    var strings = state.bootstrap.strings;
+    var badges = [
+      '<span class="symbol-badge ' + (item.standard ? 'is-core' : 'is-extended') + '">' + escapeHtml(item.standard ? strings.sidebar.badgeStandard : strings.sidebar.badgeExtended) + '</span>'
+    ];
+
+    if (item.unicode) {
+      badges.push('<span class="symbol-badge">' + escapeHtml(item.unicode) + '</span>');
+    }
+
+    if (item.angle !== null && item.angle !== undefined) {
+      badges.push('<span class="symbol-badge">' + escapeHtml(strings.sidebar.angleUnit.replace('{value}', item.angle)) + '</span>');
+    }
+
+    return '<span class="symbol-badges">' + badges.join('') + '</span>';
+  }
+
+  function renderNote(item) {
+    if (!item.note) {
+      return '';
+    }
+
+    return '<span class="symbol-note">' + escapeHtml(item.note) + '</span>';
+  }
+
+  function buildItemTitle(item) {
+    var parts = [item.label, item.categoryLabel];
+
+    if (item.unicode) {
+      parts.push(item.unicode);
+    }
+
+    if (item.note) {
+      parts.push(item.note);
+    }
+
+    return parts.join(' • ');
+  }
+
+  function formatSymbolForClipboard(symbol) {
+    var presentationMode = document.getElementById('presentationModeSelect').value;
+    var cleanSymbol = String(symbol || '').replace(/[\uFE0E\uFE0F]/g, '');
+
+    if (presentationMode === 'text' && cleanSymbol.length === 1) {
+      return cleanSymbol + '\uFE0E';
+    }
+
+    if (presentationMode === 'emoji' && cleanSymbol.length === 1) {
+      return cleanSymbol + '\uFE0F';
+    }
+
+    return cleanSymbol;
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+
+    return new Promise(function (resolve, reject) {
+      try {
+        var input = document.createElement('textarea');
+        input.value = text;
+        input.setAttribute('readonly', '');
+        input.style.position = 'absolute';
+        input.style.left = '-9999px';
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  function normalizeText(value) {
+    return String(value || '').trim().toLowerCase();
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+})();
+</script>

@@ -1,0 +1,765 @@
+[
+  {
+    "id": "signs",
+    "label": "Signos zodiacales",
+    "order": 10,
+    "items": [
+      {
+        "key": "aries",
+        "symbol": "♈",
+        "nameEs": "Aries",
+        "nameEn": "Aries",
+        "aliases": [
+          "ram",
+          "carnero"
+        ],
+        "unicode": "U+2648",
+        "standard": true
+      },
+      {
+        "key": "taurus",
+        "symbol": "♉",
+        "nameEs": "Tauro",
+        "nameEn": "Taurus",
+        "aliases": [
+          "bull",
+          "toro"
+        ],
+        "unicode": "U+2649",
+        "standard": true
+      },
+      {
+        "key": "gemini",
+        "symbol": "♊",
+        "nameEs": "Géminis",
+        "nameEn": "Gemini",
+        "aliases": [
+          "twins",
+          "gemelos"
+        ],
+        "unicode": "U+264A",
+        "standard": true
+      },
+      {
+        "key": "cancer",
+        "symbol": "♋",
+        "nameEs": "Cáncer",
+        "nameEn": "Cancer",
+        "aliases": [
+          "crab",
+          "cangrejo"
+        ],
+        "unicode": "U+264B",
+        "standard": true
+      },
+      {
+        "key": "leo",
+        "symbol": "♌",
+        "nameEs": "Leo",
+        "nameEn": "Leo",
+        "aliases": [
+          "lion",
+          "leon"
+        ],
+        "unicode": "U+264C",
+        "standard": true
+      },
+      {
+        "key": "virgo",
+        "symbol": "♍",
+        "nameEs": "Virgo",
+        "nameEn": "Virgo",
+        "aliases": [
+          "maiden"
+        ],
+        "unicode": "U+264D",
+        "standard": true
+      },
+      {
+        "key": "libra",
+        "symbol": "♎",
+        "nameEs": "Libra",
+        "nameEn": "Libra",
+        "aliases": [
+          "scales",
+          "balanza"
+        ],
+        "unicode": "U+264E",
+        "standard": true
+      },
+      {
+        "key": "scorpio",
+        "symbol": "♏",
+        "nameEs": "Escorpio",
+        "nameEn": "Scorpio",
+        "aliases": [
+          "scorpion",
+          "escorpion"
+        ],
+        "unicode": "U+264F",
+        "standard": true
+      },
+      {
+        "key": "sagittarius",
+        "symbol": "♐",
+        "nameEs": "Sagitario",
+        "nameEn": "Sagittarius",
+        "aliases": [
+          "archer",
+          "arquero"
+        ],
+        "unicode": "U+2650",
+        "standard": true
+      },
+      {
+        "key": "capricorn",
+        "symbol": "♑",
+        "nameEs": "Capricornio",
+        "nameEn": "Capricorn",
+        "aliases": [
+          "goat",
+          "cabra"
+        ],
+        "unicode": "U+2651",
+        "standard": true
+      },
+      {
+        "key": "aquarius",
+        "symbol": "♒",
+        "nameEs": "Acuario",
+        "nameEn": "Aquarius",
+        "aliases": [
+          "water bearer",
+          "aguador"
+        ],
+        "unicode": "U+2652",
+        "standard": true
+      },
+      {
+        "key": "pisces",
+        "symbol": "♓",
+        "nameEs": "Piscis",
+        "nameEn": "Pisces",
+        "aliases": [
+          "fishes",
+          "peces"
+        ],
+        "unicode": "U+2653",
+        "standard": true
+      }
+    ]
+  },
+  {
+    "id": "planets",
+    "label": "Planetas y luminarias",
+    "order": 20,
+    "items": [
+      {
+        "key": "sun",
+        "symbol": "☉",
+        "nameEs": "Sol",
+        "nameEn": "Sun",
+        "aliases": [
+          "sol"
+        ],
+        "unicode": "U+2609",
+        "standard": true
+      },
+      {
+        "key": "moon",
+        "symbol": "☽",
+        "nameEs": "Luna",
+        "nameEn": "Moon",
+        "aliases": [
+          "luna",
+          "white moon"
+        ],
+        "unicode": "U+263D",
+        "standard": true
+      },
+      {
+        "key": "mercury",
+        "symbol": "☿",
+        "nameEs": "Mercurio",
+        "nameEn": "Mercury",
+        "aliases": [
+          "mercurio"
+        ],
+        "unicode": "U+263F",
+        "standard": true
+      },
+      {
+        "key": "venus",
+        "symbol": "♀",
+        "nameEs": "Venus",
+        "nameEn": "Venus",
+        "aliases": [
+          "venus"
+        ],
+        "unicode": "U+2640",
+        "standard": true
+      },
+      {
+        "key": "mars",
+        "symbol": "♂",
+        "nameEs": "Marte",
+        "nameEn": "Mars",
+        "aliases": [
+          "marte"
+        ],
+        "unicode": "U+2642",
+        "standard": true
+      },
+      {
+        "key": "jupiter",
+        "symbol": "♃",
+        "nameEs": "Júpiter",
+        "nameEn": "Jupiter",
+        "aliases": [
+          "jupiter"
+        ],
+        "unicode": "U+2643",
+        "standard": true
+      },
+      {
+        "key": "saturn",
+        "symbol": "♄",
+        "nameEs": "Saturno",
+        "nameEn": "Saturn",
+        "aliases": [
+          "saturno"
+        ],
+        "unicode": "U+2644",
+        "standard": true
+      },
+      {
+        "key": "uranus",
+        "symbol": "♅",
+        "nameEs": "Urano",
+        "nameEn": "Uranus",
+        "aliases": [
+          "urano"
+        ],
+        "unicode": "U+2645",
+        "standard": true
+      },
+      {
+        "key": "neptune",
+        "symbol": "♆",
+        "nameEs": "Neptuno",
+        "nameEn": "Neptune",
+        "aliases": [
+          "neptuno"
+        ],
+        "unicode": "U+2646",
+        "standard": true
+      },
+      {
+        "key": "pluto",
+        "symbol": "♇",
+        "nameEs": "Plutón",
+        "nameEn": "Pluto",
+        "aliases": [
+          "pluton"
+        ],
+        "unicode": "U+2647",
+        "standard": true
+      }
+    ]
+  },
+  {
+    "id": "points",
+    "label": "Puntos y cuerpos usados en astrología",
+    "order": 30,
+    "items": [
+      {
+        "key": "chiron",
+        "symbol": "⚷",
+        "nameEs": "Quirón",
+        "nameEn": "Chiron",
+        "aliases": [
+          "chiron",
+          "quiron"
+        ],
+        "unicode": "U+26B7",
+        "standard": true
+      },
+      {
+        "key": "north_node",
+        "symbol": "☊",
+        "nameEs": "Nodo Norte",
+        "nameEn": "North Node",
+        "aliases": [
+          "dragon head",
+          "caput draconis"
+        ],
+        "unicode": "U+260A",
+        "standard": true
+      },
+      {
+        "key": "south_node",
+        "symbol": "☋",
+        "nameEs": "Nodo Sur",
+        "nameEn": "South Node",
+        "aliases": [
+          "dragon tail",
+          "cauda draconis"
+        ],
+        "unicode": "U+260B",
+        "standard": true
+      },
+      {
+        "key": "ceres",
+        "symbol": "⚳",
+        "nameEs": "Ceres",
+        "nameEn": "Ceres",
+        "aliases": [
+          "ceres"
+        ],
+        "unicode": "U+26B3",
+        "standard": true
+      },
+      {
+        "key": "lilith",
+        "symbol": "⚸",
+        "nameEs": "Lilith",
+        "nameEn": "Lilith",
+        "aliases": [
+          "black moon",
+          "black moon lilith",
+          "luna negra"
+        ],
+        "unicode": "U+26B8",
+        "standard": false,
+        "note": "Uso común en astrología, pero no tan universal como signos/planetas."
+      }
+    ]
+  },
+  {
+    "id": "angles",
+    "label": "Ángulos y ejes",
+    "order": 40,
+    "items": [
+      {
+        "key": "asc",
+        "symbol": "ASC",
+        "nameEs": "Ascendente",
+        "nameEn": "Ascendant",
+        "aliases": [
+          "asc",
+          "ascendente"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "mc",
+        "symbol": "MC",
+        "nameEs": "Medio Cielo",
+        "nameEn": "Midheaven",
+        "aliases": [
+          "mc",
+          "medio cielo"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "dsc",
+        "symbol": "DSC",
+        "nameEs": "Descendente",
+        "nameEn": "Descendant",
+        "aliases": [
+          "dsc",
+          "descendente"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "ic",
+        "symbol": "IC",
+        "nameEs": "Fondo del Cielo",
+        "nameEn": "Imum Coeli",
+        "aliases": [
+          "ic",
+          "imum coeli",
+          "fondo del cielo"
+        ],
+        "unicode": null,
+        "standard": false
+      }
+    ]
+  },
+  {
+    "id": "major_aspects",
+    "label": "Aspectos mayores",
+    "order": 50,
+    "items": [
+      {
+        "key": "conjunction",
+        "symbol": "☌",
+        "nameEs": "Conjunción",
+        "nameEn": "Conjunction",
+        "aliases": [
+          "0°"
+        ],
+        "unicode": "U+260C",
+        "angle": 0,
+        "standard": true
+      },
+      {
+        "key": "sextile",
+        "symbol": "⚹",
+        "nameEs": "Sextil",
+        "nameEn": "Sextile",
+        "aliases": [
+          "60°"
+        ],
+        "unicode": "U+26B9",
+        "angle": 60,
+        "standard": true
+      },
+      {
+        "key": "square",
+        "symbol": "□",
+        "nameEs": "Cuadratura",
+        "nameEn": "Square",
+        "aliases": [
+          "90°"
+        ],
+        "unicode": "U+25A1",
+        "angle": 90,
+        "standard": true
+      },
+      {
+        "key": "trine",
+        "symbol": "△",
+        "nameEs": "Trígono",
+        "nameEn": "Trine",
+        "aliases": [
+          "120°"
+        ],
+        "unicode": "U+25B3",
+        "angle": 120,
+        "standard": true
+      },
+      {
+        "key": "opposition",
+        "symbol": "☍",
+        "nameEs": "Oposición",
+        "nameEn": "Opposition",
+        "aliases": [
+          "180°"
+        ],
+        "unicode": "U+260D",
+        "angle": 180,
+        "standard": true
+      }
+    ]
+  },
+  {
+    "id": "minor_aspects",
+    "label": "Aspectos menores",
+    "order": 60,
+    "items": [
+      {
+        "key": "semisextile",
+        "symbol": "⚺",
+        "nameEs": "Semisextil",
+        "nameEn": "Semisextile",
+        "aliases": [
+          "30°"
+        ],
+        "unicode": "U+26BA",
+        "angle": 30,
+        "standard": true
+      },
+      {
+        "key": "semisquare",
+        "symbol": "∠",
+        "nameEs": "Semicuadratura",
+        "nameEn": "Semisquare",
+        "aliases": [
+          "45°"
+        ],
+        "unicode": "U+2220",
+        "angle": 45,
+        "standard": false,
+        "note": "No hay glifo único universal; muchos programas usan variantes."
+      },
+      {
+        "key": "sesquiquadrate",
+        "symbol": "⚼",
+        "nameEs": "Sesquicuadratura",
+        "nameEn": "Sesquiquadrate",
+        "aliases": [
+          "135°"
+        ],
+        "unicode": "U+26BC",
+        "angle": 135,
+        "standard": true
+      },
+      {
+        "key": "quincunx",
+        "symbol": "⚻",
+        "nameEs": "Quincuncio",
+        "nameEn": "Quincunx",
+        "aliases": [
+          "inconjunct",
+          "150°"
+        ],
+        "unicode": "U+26BB",
+        "angle": 150,
+        "standard": true
+      }
+    ]
+  },
+  {
+    "id": "houses",
+    "label": "Casas",
+    "order": 70,
+    "items": [
+      {
+        "key": "house_1",
+        "symbol": "I",
+        "nameEs": "Casa I",
+        "nameEn": "House I",
+        "aliases": [
+          "1"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "house_2",
+        "symbol": "II",
+        "nameEs": "Casa II",
+        "nameEn": "House II",
+        "aliases": [
+          "2"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "house_3",
+        "symbol": "III",
+        "nameEs": "Casa III",
+        "nameEn": "House III",
+        "aliases": [
+          "3"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "house_4",
+        "symbol": "IV",
+        "nameEs": "Casa IV",
+        "nameEn": "House IV",
+        "aliases": [
+          "4"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "house_5",
+        "symbol": "V",
+        "nameEs": "Casa V",
+        "nameEn": "House V",
+        "aliases": [
+          "5"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "house_6",
+        "symbol": "VI",
+        "nameEs": "Casa VI",
+        "nameEn": "House VI",
+        "aliases": [
+          "6"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "house_7",
+        "symbol": "VII",
+        "nameEs": "Casa VII",
+        "nameEn": "House VII",
+        "aliases": [
+          "7"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "house_8",
+        "symbol": "VIII",
+        "nameEs": "Casa VIII",
+        "nameEn": "House VIII",
+        "aliases": [
+          "8"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "house_9",
+        "symbol": "IX",
+        "nameEs": "Casa IX",
+        "nameEn": "House IX",
+        "aliases": [
+          "9"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "house_10",
+        "symbol": "X",
+        "nameEs": "Casa X",
+        "nameEn": "House X",
+        "aliases": [
+          "10"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "house_11",
+        "symbol": "XI",
+        "nameEs": "Casa XI",
+        "nameEn": "House XI",
+        "aliases": [
+          "11"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "house_12",
+        "symbol": "XII",
+        "nameEs": "Casa XII",
+        "nameEn": "House XII",
+        "aliases": [
+          "12"
+        ],
+        "unicode": null,
+        "standard": false
+      }
+    ]
+  },
+  {
+    "id": "classification",
+    "label": "Clasificaciones útiles",
+    "order": 80,
+    "items": [
+      {
+        "key": "fire",
+        "symbol": "🔥",
+        "nameEs": "Fuego",
+        "nameEn": "Fire",
+        "aliases": [
+          "element fire"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "earth",
+        "symbol": "🌍",
+        "nameEs": "Tierra",
+        "nameEn": "Earth",
+        "aliases": [
+          "element earth"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "air",
+        "symbol": "🌬",
+        "nameEs": "Aire",
+        "nameEn": "Air",
+        "aliases": [
+          "element air"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "water",
+        "symbol": "💧",
+        "nameEs": "Agua",
+        "nameEn": "Water",
+        "aliases": [
+          "element water"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "cardinal",
+        "symbol": "C",
+        "nameEs": "Cardinal",
+        "nameEn": "Cardinal",
+        "aliases": [
+          "modalidad cardinal"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "fixed",
+        "symbol": "F",
+        "nameEs": "Fijo",
+        "nameEn": "Fixed",
+        "aliases": [
+          "modalidad fija"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "mutable",
+        "symbol": "M",
+        "nameEs": "Mutable",
+        "nameEn": "Mutable",
+        "aliases": [
+          "modalidad mutable"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "positive",
+        "symbol": "+",
+        "nameEs": "Positiva",
+        "nameEn": "Positive",
+        "aliases": [
+          "masculina",
+          "yang"
+        ],
+        "unicode": null,
+        "standard": false
+      },
+      {
+        "key": "negative",
+        "symbol": "−",
+        "nameEs": "Negativa",
+        "nameEn": "Negative",
+        "aliases": [
+          "femenina",
+          "yin"
+        ],
+        "unicode": null,
+        "standard": false
+      }
+    ]
+  }
+]
