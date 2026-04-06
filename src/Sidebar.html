@@ -14,19 +14,34 @@
           <h1 class="app-title">Astro Symbols</h1>
           <p class="app-subtitle">Astrological glyph insertion for collaborative docs.</p>
         </div>
-        <div class="locale-badge" id="localeBadge">ES</div>
+        <div class="header-actions">
+          <button class="header-action" id="openSettingsButton" type="button">Ajustes</button>
+          <div class="locale-badge" id="localeBadge">ES</div>
+        </div>
       </header>
 
-      <section class="toolbar-card">
-        <label class="search-field" for="searchInput">
-          <span class="search-prefix">⌕</span>
-          <input id="searchInput" type="search" autocomplete="off">
-        </label>
+      <div class="browse-view" id="browseView">
+        <section class="toolbar-card">
+          <div class="quick-strip" id="quickStrip" hidden></div>
 
-        <div class="filter-bar" role="tablist" aria-label="Catalog filters">
-          <button class="filter-chip is-active" id="filterAll" type="button" data-filter-mode="all">All</button>
-          <button class="filter-chip" id="filterFavorites" type="button" data-filter-mode="favorites">Favorites</button>
-          <button class="filter-chip" id="filterStandard" type="button" data-filter-mode="standard">Standard</button>
+          <div class="category-tabs" id="categoryTabs" role="tablist" aria-label="Catalog tabs"></div>
+
+          <label class="search-field" for="searchInput">
+            <span class="search-prefix">⌕</span>
+            <input id="searchInput" type="search" autocomplete="off">
+          </label>
+        </section>
+
+        <div class="status-bar is-hidden" id="statusBar" role="status" aria-live="polite"></div>
+
+        <main class="catalog-root" id="catalogRoot">
+          <div class="empty-state" id="loadingState">Cargando catálogo astrológico...</div>
+        </main>
+      </div>
+
+      <section class="toolbar-card settings-panel" id="settingsPanel" hidden>
+        <div class="settings-header">
+          <h2 class="settings-title" id="settingsTitle">Ajustes</h2>
         </div>
 
         <div class="settings-grid">
@@ -56,12 +71,6 @@
         <p class="helper-copy" id="presentationHelperText"></p>
         <p class="helper-copy" id="fontHelperText"></p>
       </section>
-
-      <div class="status-bar is-hidden" id="statusBar" role="status" aria-live="polite"></div>
-
-      <main class="catalog-root" id="catalogRoot">
-        <div class="empty-state" id="loadingState">Cargando catálogo astrológico...</div>
-      </main>
     </div>
 
     <?!= include('Sidebar.js.html'); ?>

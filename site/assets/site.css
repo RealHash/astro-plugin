@@ -1,0 +1,578 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
+
+:root {
+  color-scheme: light;
+  --bg: #09081a;
+  --bg-strong: #120f2d;
+  --surface: rgba(15, 16, 41, 0.76);
+  --surface-strong: rgba(24, 25, 59, 0.92);
+  --ink: #f6f2ff;
+  --muted: #c8c3ea;
+  --line: rgba(255, 255, 255, 0.14);
+  --accent: #ffd36c;
+  --accent-strong: #ffb347;
+  --accent-soft: rgba(255, 211, 108, 0.18);
+  --accent-secondary: #7e79ff;
+  --shadow: 0 24px 70px rgba(5, 6, 20, 0.45);
+  --radius-xl: 28px;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --max: 1120px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 16% 18%, rgba(255, 180, 74, 0.24), transparent 16%),
+    radial-gradient(circle at 83% 12%, rgba(130, 125, 255, 0.18), transparent 18%),
+    radial-gradient(circle at 74% 34%, rgba(255, 230, 176, 0.08), transparent 10%),
+    linear-gradient(180deg, rgba(11, 10, 35, 0.74), rgba(11, 10, 35, 0.92)),
+    url("/assets/hero-banner.png") center top / cover fixed no-repeat,
+    linear-gradient(180deg, var(--bg) 0%, #070512 100%);
+}
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: #ffe39d;
+}
+
+img {
+  max-width: 100%;
+}
+
+.shell {
+  width: min(calc(100% - 32px), var(--max));
+  margin: 0 auto;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(18px);
+  background: rgba(8, 8, 24, 0.72);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.site-header__inner,
+.site-footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 0;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.brand__mark {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: inline-flex;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.34);
+}
+
+.brand__mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.brand__copy {
+  display: grid;
+  gap: 2px;
+}
+
+.brand__name {
+  font-size: 0.98rem;
+}
+
+.brand__meta {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.nav a {
+  color: rgba(246, 242, 255, 0.84);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.nav a:hover,
+.nav a[aria-current="page"] {
+  color: var(--accent);
+}
+
+.page {
+  padding: 38px 0 72px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 28px;
+  align-items: stretch;
+  margin-bottom: 28px;
+}
+
+.panel,
+.hero-card,
+.metric,
+.page-card,
+.notice,
+.checklist li,
+.support-point {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+.hero-card,
+.page-card {
+  border-radius: var(--radius-xl);
+  padding: 34px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f7dfa8;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 0 6px var(--accent-soft);
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  line-height: 1.04;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(2.6rem, 5vw, 4.8rem);
+  margin-top: 18px;
+}
+
+h2 {
+  font-size: clamp(1.65rem, 3vw, 2.3rem);
+  margin-bottom: 16px;
+}
+
+h3 {
+  font-size: 1.18rem;
+  margin-bottom: 10px;
+}
+
+p,
+li {
+  color: rgba(246, 242, 255, 0.92);
+  line-height: 1.72;
+  font-size: 1.01rem;
+}
+
+.lead {
+  font-size: 1.15rem;
+  color: var(--muted);
+  max-width: 62ch;
+  margin: 18px 0 0;
+}
+
+.hero-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  margin: 22px 0 6px;
+}
+
+.hero-lockup__logo {
+  width: 76px;
+  height: 76px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 34px rgba(2, 4, 17, 0.34);
+}
+
+.hero-lockup__copy {
+  display: grid;
+}
+
+.hero-lockup__title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 2.2rem;
+  line-height: 0.95;
+  color: #fef8ff;
+}
+
+.hero-lockup__meta {
+  color: #d7cdf8;
+  font-size: 0.96rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cta-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.button,
+.button--ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: transform 140ms ease, background 140ms ease, color 140ms ease;
+}
+
+.button {
+  background: linear-gradient(135deg, #ffd66f 0%, #ffb349 100%);
+  color: #24172d;
+  box-shadow: 0 10px 28px rgba(255, 193, 89, 0.34);
+}
+
+.button:hover {
+  background: linear-gradient(135deg, #ffe089 0%, #ffbf60 100%);
+  color: #24172d;
+  transform: translateY(-1px);
+}
+
+.button--ghost {
+  border: 1px solid var(--line);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.button--ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.panel {
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
+.panel__label {
+  font-size: 0.83rem;
+  color: #f4dca0;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.hero-showcase {
+  padding: 24px;
+}
+
+.hero-showcase__frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(6, 7, 18, 0.9);
+}
+
+.hero-showcase__banner {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hero-showcase__badge {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(14, 14, 44, 0.74), rgba(25, 22, 63, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+.hero-showcase__badge p {
+  margin: 6px 0 0;
+  color: #ddd6ff;
+}
+
+.glyph-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.glyph {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-strong);
+  border: 1px solid rgba(31, 40, 51, 0.08);
+  font-size: 1.9rem;
+}
+
+.list-clean,
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list-clean li + li,
+.checklist li + li {
+  margin-top: 12px;
+}
+
+.feature-grid,
+.metric-grid,
+.two-col,
+.support-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.feature-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 24px 0 36px;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 22px;
+}
+
+.two-col,
+.support-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.metric,
+.support-point {
+  border-radius: var(--radius-lg);
+  padding: 22px;
+}
+
+.metric__value {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: var(--accent);
+}
+
+.metric__label {
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.feature-card {
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line);
+}
+
+.feature-card p,
+.support-point p,
+.metric p {
+  margin: 0;
+}
+
+.page-card + .page-card {
+  margin-top: 22px;
+}
+
+.page-card p:first-of-type {
+  margin-top: 0;
+}
+
+.section-spacer {
+  margin-top: 34px;
+}
+
+.notice {
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+
+.notice strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.notice--soft {
+  background: linear-gradient(135deg, rgba(255, 211, 108, 0.12), rgba(126, 121, 255, 0.14));
+}
+
+.meta-line {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.checklist li {
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+}
+
+.checklist li strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.site-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(7, 7, 18, 0.72);
+}
+
+.site-footer__copy {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.site-footer__links {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.mono {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.95em;
+}
+
+@media (max-width: 960px) {
+  .hero,
+  .feature-grid,
+  .metric-grid,
+  .two-col,
+  .support-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-card,
+  .page-card,
+  .panel {
+    padding: 26px;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 16% 18%, rgba(255, 180, 74, 0.24), transparent 16%),
+      radial-gradient(circle at 83% 12%, rgba(130, 125, 255, 0.18), transparent 18%),
+      linear-gradient(180deg, rgba(11, 10, 35, 0.86), rgba(11, 10, 35, 0.96)),
+      url("/assets/hero-banner.png") center top / 180% auto no-repeat,
+      linear-gradient(180deg, var(--bg) 0%, #070512 100%);
+  }
+}
+
+@media (max-width: 640px) {
+  .site-header__inner,
+  .site-footer__inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav {
+    gap: 12px;
+  }
+
+  .page {
+    padding-top: 24px;
+  }
+
+  .hero-card,
+  .page-card,
+  .panel,
+  .metric,
+  .support-point {
+    padding: 22px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-lockup {
+    gap: 12px;
+  }
+
+  .hero-lockup__logo {
+    width: 62px;
+    height: 62px;
+    border-radius: 18px;
+  }
+
+  .hero-lockup__title {
+    font-size: 1.9rem;
+  }
+
+  .hero-showcase__badge {
+    position: static;
+    margin: 12px;
+  }
+}

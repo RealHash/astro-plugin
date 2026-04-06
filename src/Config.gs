@@ -4,7 +4,8 @@ var AstroConfig = (function () {
       name: 'Astro Symbols',
       version: '0.1.0',
       sidebarTitle: 'Astro Symbols',
-      quickInsertSymbolId: 'sun'
+      quickInsertSymbolId: 'sun',
+      quickAccessSymbolIds: ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter']
     },
     ui: {
       recentLimit: 6,

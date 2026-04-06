@@ -9,24 +9,19 @@ var AstroCatalog = (function () {
     houses: { es: 'Casas', en: 'Houses' },
     classification: { es: 'Clasificaciones útiles', en: 'Useful classifications' }
   };
-
-  var NORMALIZED_CATEGORIES = normalizeCategories_(ASTRO_SYMBOLS_CATALOG || []);
-  var CATEGORY_ORDER = NORMALIZED_CATEGORIES.map(function (category) {
-    return category.id;
-  });
-  var CATEGORY_META = indexCategories_(NORMALIZED_CATEGORIES);
-  var SYMBOLS = flattenSymbols_(NORMALIZED_CATEGORIES);
+  var CATALOG_CACHE = null;
 
   function getCatalog(locale, preferences) {
+    var catalogState = getCatalogState_();
     var resolvedLocale = AstroUtils.normalizeLocale(locale);
     var favoriteIds = preferences && preferences.favorites ? preferences.favorites : [];
-    var items = SYMBOLS.map(function (entry) {
+    var items = catalogState.symbols.map(function (entry) {
       return toClientItem_(entry, resolvedLocale, favoriteIds);
     });
 
     return {
       items: items,
-      staticSections: CATEGORY_ORDER.map(function (categoryKey) {
+      staticSections: catalogState.categoryOrder.map(function (categoryKey) {
         return {
           key: categoryKey,
           label: getCategoryLabel(categoryKey, resolvedLocale),
@@ -38,19 +33,46 @@ var AstroCatalog = (function () {
 
   function getCategoryLabel(categoryKey, locale) {
     var resolvedLocale = AstroUtils.normalizeLocale(locale);
-    return CATEGORY_META[categoryKey].names[resolvedLocale];
+    var category = getCatalogState_().categoryMeta[categoryKey];
+    return category ? category.names[resolvedLocale] : String(categoryKey || '');
   }
 
   function findById(symbolId) {
     var targetId = String(symbolId || '');
+    var symbols = getCatalogState_().symbols;
 
-    for (var i = 0; i < SYMBOLS.length; i += 1) {
-      if (SYMBOLS[i].id === targetId) {
-        return AstroUtils.deepClone(SYMBOLS[i]);
+    for (var i = 0; i < symbols.length; i += 1) {
+      if (symbols[i].id === targetId) {
+        return AstroUtils.deepClone(symbols[i]);
       }
     }
 
     return null;
+  }
+
+  function getCatalogState_() {
+    if (!CATALOG_CACHE) {
+      var normalizedCategories = normalizeCategories_(getCatalogDefinition_());
+
+      CATALOG_CACHE = {
+        normalizedCategories: normalizedCategories,
+        categoryOrder: normalizedCategories.map(function (category) {
+          return category.id;
+        }),
+        categoryMeta: indexCategories_(normalizedCategories),
+        symbols: flattenSymbols_(normalizedCategories)
+      };
+    }
+
+    return CATALOG_CACHE;
+  }
+
+  function getCatalogDefinition_() {
+    if (typeof ASTRO_SYMBOLS_CATALOG !== 'undefined' && Array.isArray(ASTRO_SYMBOLS_CATALOG)) {
+      return ASTRO_SYMBOLS_CATALOG;
+    }
+
+    return [];
   }
 
   function toClientItem_(entry, locale, favoriteIds) {

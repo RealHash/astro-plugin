@@ -3,7 +3,8 @@
   var state = {
     bootstrap: null,
     collapsedSections: {},
-    filterMode: 'all'
+    activeTab: 'planets',
+    view: 'browse'
   };
   var statusTimer = null;
 
@@ -17,12 +18,8 @@
     document.getElementById('spaceModeSelect').addEventListener('change', persistPreferences);
     document.getElementById('presentationModeSelect').addEventListener('change', persistPreferences);
     document.getElementById('fontToggle').addEventListener('change', persistPreferences);
-    Array.prototype.forEach.call(document.querySelectorAll('[data-filter-mode]'), function (button) {
-      button.addEventListener('click', function () {
-        state.filterMode = button.getAttribute('data-filter-mode');
-        updateFilterChips();
-        renderCatalog();
-      });
+    document.getElementById('openSettingsButton').addEventListener('click', function () {
+      setView(state.view === 'settings' ? 'browse' : 'settings');
     });
   }
 
@@ -35,9 +32,13 @@
 
   function initializeApp(bootstrap) {
     state.bootstrap = bootstrap;
+    state.activeTab = getCategoryTabs_()[0].key;
     applyStrings();
     applyPreferences();
+    renderQuickAccess();
+    renderCategoryTabs();
     renderCatalog();
+    setView(state.view);
   }
 
   function applyStrings() {
@@ -51,9 +52,9 @@
     document.getElementById('fontToggleLabel').textContent = strings.sidebar.fontToggle;
     document.getElementById('fontHelperText').textContent = strings.sidebar.fontHelper;
     document.getElementById('localeBadge').textContent = strings.sidebar.localeBadge;
-    document.getElementById('filterAll').textContent = strings.sidebar.filterAll;
-    document.getElementById('filterFavorites').textContent = strings.sidebar.filterFavorites;
-    document.getElementById('filterStandard').textContent = strings.sidebar.filterStandard;
+    document.getElementById('quickStrip').setAttribute('aria-label', strings.sidebar.quickAccess);
+    document.getElementById('categoryTabs').setAttribute('aria-label', strings.sidebar.categories);
+    document.getElementById('settingsTitle').textContent = strings.sidebar.settingsTitle;
 
     var spaceModeSelect = document.getElementById('spaceModeSelect');
     spaceModeSelect.querySelector('option[value="none"]').textContent = strings.sidebar.insertOnly;
@@ -63,7 +64,6 @@
     presentationModeSelect.querySelector('option[value="auto"]').textContent = strings.sidebar.presentationAuto;
     presentationModeSelect.querySelector('option[value="text"]').textContent = strings.sidebar.presentationText;
     presentationModeSelect.querySelector('option[value="emoji"]').textContent = strings.sidebar.presentationEmoji;
-    updateFilterChips();
   }
 
   function applyPreferences() {
@@ -89,6 +89,23 @@
       .saveUserPreferencesFromSidebar(payload);
   }
 
+  function setView(view) {
+    state.view = view === 'settings' ? 'settings' : 'browse';
+    document.getElementById('browseView').hidden = state.view !== 'browse';
+    document.getElementById('settingsPanel').hidden = state.view !== 'settings';
+    updateHeaderActionLabel_();
+  }
+
+  function updateHeaderActionLabel_() {
+    var button = document.getElementById('openSettingsButton');
+    var label = state.view === 'settings'
+      ? state.bootstrap.strings.sidebar.backToCatalog
+      : state.bootstrap.strings.sidebar.settings;
+
+    button.textContent = label;
+    button.setAttribute('aria-label', label);
+  }
+
   function renderCatalog() {
     if (!state.bootstrap) {
       return;
@@ -97,91 +114,105 @@
     var strings = state.bootstrap.strings;
     var catalogRoot = document.getElementById('catalogRoot');
     var query = normalizeText(document.getElementById('searchInput').value);
-    var sections = buildSections()
-      .map(function (section) {
-        var items = section.items.filter(function (item) {
-          return (!query || item.searchText.indexOf(query) > -1) && matchesFilter(item);
-        });
+    var currentTab = getCurrentTab_();
+    var mainItems = getItemsForTab_(currentTab).filter(function (item) {
+      return !query || item.searchText.indexOf(query) > -1;
+    });
+    var favoriteItems = getFavoriteItems_().filter(function (item) {
+      return !query || item.searchText.indexOf(query) > -1;
+    });
 
-        return {
-          key: section.key,
-          label: section.label,
-          items: items,
-          dynamic: section.dynamic
-        };
-      })
-      .filter(function (section) {
-        return section.items.length > 0;
-      });
-
-    if (!sections.length) {
+    if (!mainItems.length && !favoriteItems.length) {
       catalogRoot.innerHTML = '<div class="empty-state">' + escapeHtml(strings.sidebar.noResults) + '</div>';
       return;
     }
 
-    catalogRoot.innerHTML = sections.map(renderSection).join('');
-    bindSectionEvents();
+    catalogRoot.innerHTML = [
+      mainItems.length ? renderGridSection_(currentTab.label, mainItems, false) : '',
+      favoriteItems.length ? renderGridSection_(strings.sidebar.favorites, favoriteItems, true) : ''
+    ].join('');
+
     bindSymbolEvents();
   }
 
-  function renderSection(section) {
-    var collapsedClass = state.collapsedSections[section.key] ? ' is-collapsed' : '';
+  function renderQuickAccess() {
+    if (!state.bootstrap) {
+      return;
+    }
 
+    var quickStrip = document.getElementById('quickStrip');
+    var quickAccessIds = (state.bootstrap.preferences.recentSymbolIds || []);
+
+    if (!quickAccessIds.length) {
+      quickAccessIds = (((state.bootstrap.config || {}).app || {}).quickAccessSymbolIds || []);
+    }
+
+    var itemsById = state.bootstrap.catalog.items.reduce(function (accumulator, item) {
+      accumulator[item.id] = item;
+      return accumulator;
+    }, {});
+    var quickItems = quickAccessIds.map(function (symbolId) {
+      return itemsById[symbolId];
+    }).filter(Boolean);
+
+    if (!quickItems.length) {
+      quickStrip.hidden = true;
+      quickStrip.innerHTML = '';
+      return;
+    }
+
+    quickStrip.hidden = false;
+    quickStrip.innerHTML = quickItems.map(function (item) {
+      return '<button class="quick-symbol" type="button" title="' + escapeHtml(buildItemTitle(item)) + '" aria-label="' + escapeHtml(item.label) + '" data-quick-symbol="' + escapeHtml(item.id) + '">' + escapeHtml(formatSymbolForUi(item.symbol)) + '</button>';
+    }).join('');
+
+    bindQuickAccessEvents();
+  }
+
+  function renderCategoryTabs() {
+    var categoryTabs = document.getElementById('categoryTabs');
+    var tabs = getCategoryTabs_();
+
+    categoryTabs.innerHTML = tabs.map(function (tab) {
+      var isActive = tab.key === state.activeTab;
+      return '<button class="category-tab' + (isActive ? ' is-active' : '') + '" type="button" role="tab" aria-selected="' + (isActive ? 'true' : 'false') + '" data-category-tab="' + escapeHtml(tab.key) + '">' + escapeHtml(tab.label) + '</button>';
+    }).join('');
+
+    Array.prototype.forEach.call(document.querySelectorAll('[data-category-tab]'), function (button) {
+      button.addEventListener('click', function () {
+        state.activeTab = button.getAttribute('data-category-tab');
+        renderCategoryTabs();
+        renderCatalog();
+      });
+    });
+  }
+
+  function renderGridSection_(label, items, isSecondary) {
     return [
-      '<section class="section-card' + collapsedClass + '" data-section-key="' + escapeHtml(section.key) + '">',
-      '  <button class="section-toggle" type="button" data-toggle-section="' + escapeHtml(section.key) + '">',
-      '    <span class="section-heading">',
-      '      <span class="section-title">' + escapeHtml(section.label) + '</span>',
-      '      <span class="section-count">' + section.items.length + '</span>',
-      '    </span>',
-      '    <span class="section-chevron">▾</span>',
-      '  </button>',
+      '<section class="section-card' + (isSecondary ? ' section-card-secondary' : '') + '">',
+      '  <div class="section-static-header">',
+      '    <span class="section-title">' + escapeHtml(label) + '</span>',
+      '    <span class="section-count">' + items.length + '</span>',
+      '  </div>',
       '  <div class="section-content">',
-      section.items.map(renderItem).join(''),
+      items.map(renderItem).join(''),
       '  </div>',
       '</section>'
     ].join('');
   }
 
   function renderItem(item) {
-    var strings = state.bootstrap.strings;
-    var favoriteLabel = item.isFavorite ? strings.sidebar.favoriteRemove : strings.sidebar.favoriteAdd;
-    var favoriteGlyph = item.isFavorite ? '★' : '☆';
-    var favoriteClass = item.isFavorite ? ' is-active' : '';
     var title = buildItemTitle(item);
 
-    return [
-      '<div class="symbol-card" data-symbol-card="' + escapeHtml(item.id) + '">',
-      '  <button class="symbol-action" type="button" title="' + escapeHtml(title) + '" data-insert-symbol="' + escapeHtml(item.id) + '">',
-      '    <span class="symbol-glyph">' + escapeHtml(item.symbol) + '</span>',
-      '    <span class="symbol-meta">',
-      '      <span class="symbol-label">' + escapeHtml(item.label) + '</span>',
-      '      <span class="symbol-category">' + escapeHtml(item.categoryLabel) + '</span>',
-      renderBadges(item),
-      renderNote(item),
-      '    </span>',
-      '  </button>',
-      '  <button class="favorite-action' + favoriteClass + '" type="button" title="' + escapeHtml(favoriteLabel) + '" aria-label="' + escapeHtml(favoriteLabel) + '" data-favorite-symbol="' + escapeHtml(item.id) + '">' + favoriteGlyph + '</button>',
-      '  <button class="copy-action" type="button" data-copy-symbol="' + escapeHtml(item.id) + '">' + escapeHtml(strings.sidebar.copy) + '</button>',
-      '</div>'
-    ].join('');
+    return '<button class="symbol-tile' + (item.isFavorite ? ' is-favorite' : '') + '" type="button" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(item.label) + '" data-symbol-card="' + escapeHtml(item.id) + '" data-insert-symbol="' + escapeHtml(item.id) + '">' + escapeHtml(formatSymbolForUi(item.symbol)) + '</button>';
   }
 
-  function bindSectionEvents() {
-    Array.prototype.forEach.call(document.querySelectorAll('[data-toggle-section]'), function (button) {
+  function bindQuickAccessEvents() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-quick-symbol]'), function (button) {
       button.addEventListener('click', function () {
-        var sectionKey = button.getAttribute('data-toggle-section');
-        state.collapsedSections[sectionKey] = !state.collapsedSections[sectionKey];
-        renderCatalog();
+        var symbolId = button.getAttribute('data-quick-symbol');
+        insertSymbol(symbolId, button);
       });
-    });
-  }
-
-  function updateFilterChips() {
-    Array.prototype.forEach.call(document.querySelectorAll('[data-filter-mode]'), function (button) {
-      var isActive = button.getAttribute('data-filter-mode') === state.filterMode;
-      button.classList.toggle('is-active', isActive);
-      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
   }
 
@@ -193,19 +224,6 @@
       });
     });
 
-    Array.prototype.forEach.call(document.querySelectorAll('[data-copy-symbol]'), function (button) {
-      button.addEventListener('click', function () {
-        var symbolId = button.getAttribute('data-copy-symbol');
-        copySymbol(symbolId);
-      });
-    });
-
-    Array.prototype.forEach.call(document.querySelectorAll('[data-favorite-symbol]'), function (button) {
-      button.addEventListener('click', function () {
-        var symbolId = button.getAttribute('data-favorite-symbol');
-        toggleFavorite(symbolId, button);
-      });
-    });
   }
 
   function insertSymbol(symbolId, button) {
@@ -231,6 +249,7 @@
 
         if (result.preferences) {
           syncPreferences(result.preferences);
+          renderQuickAccess();
           renderCatalog();
         }
 
@@ -294,61 +313,48 @@
       });
   }
 
-  function buildSections() {
+  function getCategoryTabs_() {
+    var strings = state.bootstrap ? state.bootstrap.strings : { sidebar: {} };
+
+    return [
+      { key: 'planets', label: strings.sidebar.tabPlanets || 'Planetas', categoryKeys: ['planets'] },
+      { key: 'signs', label: strings.sidebar.tabSigns || 'Zodiaco', categoryKeys: ['signs'] },
+      { key: 'points', label: strings.sidebar.tabPoints || 'Puntos', categoryKeys: ['points'] },
+      { key: 'angles', label: strings.sidebar.tabAngles || 'Angulos', categoryKeys: ['angles'] },
+      { key: 'aspects', label: strings.sidebar.tabAspects || 'Aspectos', categoryKeys: ['major_aspects', 'minor_aspects'] },
+      { key: 'houses', label: strings.sidebar.tabHouses || 'Casas', categoryKeys: ['houses'] },
+      { key: 'classification', label: strings.sidebar.tabEtc || 'Etc', categoryKeys: ['classification'] }
+    ];
+  }
+
+  function getCurrentTab_() {
+    var tabs = getCategoryTabs_();
+
+    for (var i = 0; i < tabs.length; i += 1) {
+      if (tabs[i].key === state.activeTab) {
+        return tabs[i];
+      }
+    }
+
+    return tabs[0];
+  }
+
+  function getItemsForTab_(tab) {
+    return state.bootstrap.catalog.items.filter(function (item) {
+      return tab.categoryKeys.indexOf(item.categoryKey) > -1;
+    });
+  }
+
+  function getFavoriteItems_() {
+    var favoriteIds = state.bootstrap.preferences.favorites || [];
     var itemsById = state.bootstrap.catalog.items.reduce(function (accumulator, item) {
       accumulator[item.id] = item;
       return accumulator;
     }, {});
-    var sections = [];
-    var favorites = state.bootstrap.preferences.favorites || [];
-    var recentSymbolIds = state.bootstrap.preferences.recentSymbolIds || [];
 
-    if (favorites.length) {
-      sections.push({
-        key: 'favorites',
-        label: state.bootstrap.strings.sidebar.favorites,
-        items: favorites.map(function (symbolId) {
-          return itemsById[symbolId];
-        }).filter(Boolean),
-        dynamic: true
-      });
-    }
-
-    if (recentSymbolIds.length) {
-      sections.push({
-        key: 'recent',
-        label: state.bootstrap.strings.sidebar.recents,
-        items: recentSymbolIds.map(function (symbolId) {
-          return itemsById[symbolId];
-        }).filter(Boolean),
-        dynamic: true
-      });
-    }
-
-    state.bootstrap.catalog.staticSections.forEach(function (section) {
-      sections.push({
-        key: section.key,
-        label: section.label,
-        dynamic: false,
-        items: state.bootstrap.catalog.items.filter(function (item) {
-          return item.categoryKey === section.key;
-        })
-      });
-    });
-
-    return sections;
-  }
-
-  function matchesFilter(item) {
-    if (state.filterMode === 'favorites') {
-      return item.isFavorite;
-    }
-
-    if (state.filterMode === 'standard') {
-      return item.standard;
-    }
-
-    return true;
+    return favoriteIds.map(function (symbolId) {
+      return itemsById[symbolId];
+    }).filter(Boolean);
   }
 
   function syncPreferences(partialPreferences) {
@@ -400,31 +406,6 @@
     });
   }
 
-  function renderBadges(item) {
-    var strings = state.bootstrap.strings;
-    var badges = [
-      '<span class="symbol-badge ' + (item.standard ? 'is-core' : 'is-extended') + '">' + escapeHtml(item.standard ? strings.sidebar.badgeStandard : strings.sidebar.badgeExtended) + '</span>'
-    ];
-
-    if (item.unicode) {
-      badges.push('<span class="symbol-badge">' + escapeHtml(item.unicode) + '</span>');
-    }
-
-    if (item.angle !== null && item.angle !== undefined) {
-      badges.push('<span class="symbol-badge">' + escapeHtml(strings.sidebar.angleUnit.replace('{value}', item.angle)) + '</span>');
-    }
-
-    return '<span class="symbol-badges">' + badges.join('') + '</span>';
-  }
-
-  function renderNote(item) {
-    if (!item.note) {
-      return '';
-    }
-
-    return '<span class="symbol-note">' + escapeHtml(item.note) + '</span>';
-  }
-
   function buildItemTitle(item) {
     var parts = [item.label, item.categoryLabel];
 
@@ -449,6 +430,16 @@
 
     if (presentationMode === 'emoji' && cleanSymbol.length === 1) {
       return cleanSymbol + '\uFE0F';
+    }
+
+    return cleanSymbol;
+  }
+
+  function formatSymbolForUi(symbol) {
+    var cleanSymbol = String(symbol || '').replace(/[\uFE0E\uFE0F]/g, '');
+
+    if (cleanSymbol.length === 1) {
+      return cleanSymbol + '\uFE0E';
     }
 
     return cleanSymbol;
