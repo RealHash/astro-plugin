@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Support | Astro Symbols</title>
-  <meta name="description" content="Support page for Astro Symbols for Google Docs.">
+  <meta name="description" content="Support page for Astro Symbols for Google Docs™.">
   <link rel="icon" href="/assets/logo-app.png" type="image/png">
   <link rel="stylesheet" href="/assets/site.css">
 </head>
@@ -17,7 +17,7 @@
         </span>
         <span class="brand__copy">
           <span class="brand__name">Astro Symbols</span>
-          <span class="brand__meta">Google Docs add-on</span>
+          <span class="brand__meta">Google Docs™ add-on</span>
         </span>
       </a>
       <nav class="nav" aria-label="Primary">
@@ -35,8 +35,7 @@
         <span class="eyebrow">Support and compliance contact</span>
         <h1>Need help with Astro Symbols?</h1>
         <p class="lead">
-          Support requests, billing questions, installation issues, and privacy matters are handled through the private support
-          channel configured for approved users.
+          Use the support form below or email <a href="mailto:astroaddon@productoindustrial.com">astroaddon@productoindustrial.com</a>.
         </p>
         <div class="cta-row">
           <a class="button" href="/">Return to overview</a>
@@ -45,11 +44,104 @@
       </article>
 
       <section class="page-card">
+        <h2>Send a support request</h2>
+        <div class="notice notice--success" id="supportSuccess" hidden>
+          <strong>Message ready</strong>
+          Your support request was sent. If you do not receive a reply within 3 business days, email
+          <a href="mailto:astroaddon@productoindustrial.com">astroaddon@productoindustrial.com</a>.
+        </div>
+        <div class="contact-grid section-spacer">
+          <form
+            class="form-shell"
+            action="https://formsubmit.co/astroaddon@productoindustrial.com"
+            method="POST"
+          >
+            <input type="hidden" name="_subject" value="Astro Symbols support request">
+            <input id="supportNextField" type="hidden" name="_next" value="">
+            <input type="hidden" name="_template" value="table">
+            <input type="text" name="_honey" class="sr-only" tabindex="-1" autocomplete="off">
+
+            <div class="support-form">
+              <div class="form-grid">
+                <div class="field">
+                  <label for="supportName">Name</label>
+                  <input id="supportName" name="name" type="text" autocomplete="name" required>
+                </div>
+                <div class="field">
+                  <label for="supportEmail">Email</label>
+                  <input id="supportEmail" name="email" type="email" autocomplete="email" required>
+                </div>
+                <div class="field">
+                  <label for="supportTopic">Topic</label>
+                  <select id="supportTopic" name="topic" required>
+                    <option value="">Choose one</option>
+                    <option value="Bug report">Bug report</option>
+                    <option value="Access issue">Access issue</option>
+                    <option value="Policy or compliance">Policy or compliance</option>
+                    <option value="Commercial question">Commercial question</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="supportAccount">Google account type</label>
+                  <input
+                    id="supportAccount"
+                    name="google_account_type"
+                    type="text"
+                    placeholder="Google Workspace™, Gmail™, admin-managed, test account..."
+                  >
+                </div>
+                <div class="field field--full">
+                  <label for="supportDocUrl">Document URL or page under review</label>
+                  <input
+                    id="supportDocUrl"
+                    name="context_url"
+                    type="url"
+                    inputmode="url"
+                    placeholder="https://docs.google.com/... or the public page you are reviewing"
+                  >
+                </div>
+                <div class="field field--full">
+                  <label for="supportMessage">Message</label>
+                  <textarea
+                    id="supportMessage"
+                    name="message"
+                    placeholder="Describe the issue, what you clicked, what you expected, and what happened instead."
+                    required
+                  ></textarea>
+                </div>
+              </div>
+              <p class="field-help">
+                This form sends an email to <a href="mailto:astroaddon@productoindustrial.com">astroaddon@productoindustrial.com</a>.
+              </p>
+              <button class="button" type="submit">Send support request</button>
+            </div>
+          </form>
+
+          <aside class="contact-card">
+            <div class="support-point">
+              <h3>Email</h3>
+              <p>If you prefer, contact support directly by email.</p>
+              <a class="contact-card__email" href="mailto:astroaddon@productoindustrial.com">astroaddon@productoindustrial.com</a>
+            </div>
+            <div class="support-point">
+              <h3>What happens next</h3>
+              <p>Messages are routed to the support inbox and should receive a response within 3 business days.</p>
+            </div>
+            <div class="support-point">
+              <h3>Marketplace review</h3>
+              <p>This page now exposes both a public form and a visible support email for Google Workspace™ Marketplace review.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="page-card">
         <h2>What to include in your message</h2>
         <div class="support-grid">
           <div class="support-point">
             <h3>For bug reports</h3>
-            <p>Include the Google Docs context, what you clicked, the symbol involved, and any visible error message or screenshot.</p>
+            <p>Include the Google Docs™ context, what you clicked, the symbol involved, and any visible error message or screenshot.</p>
           </div>
           <div class="support-point">
             <h3>For access issues</h3>
@@ -65,9 +157,9 @@
           </div>
         </div>
         <div class="notice section-spacer">
-          <strong>Public privacy choice</strong>
-          The direct support email is intentionally not exposed on this public site. Contact details are shared through the
-          approved support channel and the Google listing configuration.
+          <strong>Support channel</strong>
+          If the form fails or you prefer direct contact, email
+          <a href="mailto:astroaddon@productoindustrial.com">astroaddon@productoindustrial.com</a>.
         </div>
       </section>
 
@@ -84,7 +176,7 @@
           </li>
           <li>
             <strong>Scope and limitations</strong>
-            The add-on operates within Google Docs and depends on Google Workspace, Apps Script, and Google Cloud availability.
+            The add-on operates within Google Docs™ and depends on Google Workspace™, Google Apps Script™, and Google Cloud™ availability.
           </li>
         </ul>
       </section>
@@ -106,7 +198,7 @@
   <footer class="site-footer">
     <div class="shell site-footer__inner">
       <div class="site-footer__copy">
-        Astro Symbols for Google Docs. Support details are shared through the product onboarding flow and Google listing.
+        Astro Symbols for Google Docs™. Google Docs™ is a trademark of Google LLC.
       </div>
       <div class="site-footer__links">
         <a href="/">Overview</a>
@@ -115,5 +207,21 @@
       </div>
     </div>
   </footer>
+  <script>
+    (function () {
+      var nextField = document.getElementById('supportNextField');
+      var successNotice = document.getElementById('supportSuccess');
+      var url = new URL(window.location.href);
+
+      if (nextField) {
+        url.searchParams.set('sent', '1');
+        nextField.value = url.toString();
+      }
+
+      if (successNotice && new URLSearchParams(window.location.search).get('sent') === '1') {
+        successNotice.hidden = false;
+      }
+    })();
+  </script>
 </body>
 </html>

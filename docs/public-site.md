@@ -75,6 +75,7 @@ Si usás `astroaddon.productoindustrial.com`, podés cargar:
 
 Revisar especialmente:
 
-- si querés mantener el email fuera del sitio público, cargar el support email en Google OAuth / Marketplace y no mostrarlo en la web;
+- que la URL de soporte publique un email o formulario visible; para review de Marketplace no alcanza con decir que el contacto existe en privado o solo dentro de Google;
 - que el dominio esté verificado también en Google Search Console si lo vas a usar en OAuth verification;
 - que la home, privacy y terms apunten al mismo dominio autorizado que cargues en OAuth consent.
+- que el listing y, idealmente, el sitio usen `Google Docs™` cuando nombren el producto y agreguen una atribución del tipo `Google Docs™ is a trademark of Google LLC.`

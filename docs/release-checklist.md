@@ -29,3 +29,18 @@
 - Preparar material de QA reproducible.
 - Validar comportamiento en cuentas del dominio y cuentas de prueba separadas.
 - Evaluar si conviene sumar homepage card además de la sidebar HTML.
+
+## Checklist de resubmisión a Google Workspace Marketplace
+
+- Asegurar que el nombre corto, la descripción corta y la descripción larga del listing usen `Google Docs™` donde corresponda.
+- Agregar una nota de atribución en la descripción larga, por ejemplo: `Google Docs™ is a trademark of Google LLC.`
+- Verificar que la URL de soporte publique un punto de contacto real visible para usuarios: email o formulario.
+- Verificar que la URL de privacy policy apunte a una política pública real y no a una página genérica.
+- Verificar que la URL de terms of service apunte a términos públicos reales y consistentes con el producto.
+- Copiar manualmente al Marketplace SDK todos los scopes de `src/appsscript.json`.
+- Copiar manualmente los mismos scopes al OAuth consent screen de Google Cloud.
+- No remover los scopes por defecto `userinfo.email` y `userinfo.profile` del consentimiento.
+- Confirmar que los scopes en Apps Script, Marketplace SDK y OAuth consent screen sean idénticos.
+- Enviar la app a OAuth verification si hay scopes sensibles o restringidos.
+- No resubir al Marketplace hasta que OAuth verification haya sido aprobada.
+- Verificar que el sitio público no muestre botones o enlaces al Marketplace si la app todavía no fue aprobada.
