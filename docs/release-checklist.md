@@ -37,6 +37,7 @@
 - Verificar que la URL de soporte publique un punto de contacto real visible para usuarios: email o formulario.
 - Verificar que la URL de privacy policy apunte a una política pública real y no a una página genérica.
 - Verificar que la URL de terms of service apunte a términos públicos reales y consistentes con el producto.
+- Si la app pide `userinfo.email`, verificar que la privacy policy y el listing expliquen para qué se usa hoy.
 - Copiar manualmente al Marketplace SDK todos los scopes de `src/appsscript.json`.
 - Copiar manualmente los mismos scopes al OAuth consent screen de Google Cloud.
 - No remover los scopes por defecto `userinfo.email` y `userinfo.profile` del consentimiento.

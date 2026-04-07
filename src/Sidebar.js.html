@@ -35,6 +35,7 @@
     state.activeTab = getCategoryTabs_()[0].key;
     applyStrings();
     applyPreferences();
+    renderIdentity();
     renderQuickAccess();
     renderCategoryTabs();
     renderCatalog();
@@ -51,10 +52,16 @@
     document.getElementById('presentationHelperText').textContent = strings.sidebar.presentationHelper;
     document.getElementById('fontToggleLabel').textContent = strings.sidebar.fontToggle;
     document.getElementById('fontHelperText').textContent = strings.sidebar.fontHelper;
+    document.getElementById('identityTitle').textContent = strings.sidebar.identityTitle;
+    document.getElementById('identityUsageText').textContent = strings.sidebar.identityUsage;
+    document.getElementById('supportLink').textContent = strings.sidebar.supportLink;
+    document.getElementById('privacyLink').textContent = strings.sidebar.privacyLink;
+    document.getElementById('termsLink').textContent = strings.sidebar.termsLink;
     document.getElementById('localeBadge').textContent = strings.sidebar.localeBadge;
     document.getElementById('quickStrip').setAttribute('aria-label', strings.sidebar.quickAccess);
     document.getElementById('categoryTabs').setAttribute('aria-label', strings.sidebar.categories);
     document.getElementById('settingsTitle').textContent = strings.sidebar.settingsTitle;
+    applyHeaderLinks();
 
     var spaceModeSelect = document.getElementById('spaceModeSelect');
     spaceModeSelect.querySelector('option[value="none"]').textContent = strings.sidebar.insertOnly;
@@ -72,6 +79,42 @@
     document.getElementById('spaceModeSelect').value = preferences.spaceMode;
     document.getElementById('presentationModeSelect').value = preferences.presentationMode;
     document.getElementById('fontToggle').checked = Boolean(preferences.applyPreferredFont);
+  }
+
+  function applyHeaderLinks() {
+    var legalLinks = (((state.bootstrap || {}).config || {}).app || {}).legalLinks || {};
+
+    applyLink_('supportLink', legalLinks.support);
+    applyLink_('privacyLink', legalLinks.privacy);
+    applyLink_('termsLink', legalLinks.terms);
+  }
+
+  function applyLink_(id, href) {
+    var element = document.getElementById(id);
+
+    if (!element || !href) {
+      return;
+    }
+
+    element.href = href;
+  }
+
+  function renderIdentity() {
+    var identity = state.bootstrap.identity || {};
+    var strings = state.bootstrap.strings;
+    var summary = strings.sidebar.identityEmailUnavailable;
+
+    if (identity.emailAvailable && identity.email) {
+      summary = formatTemplate(strings.sidebar.identityEmailAvailable, {
+        email: identity.email
+      });
+    } else if (identity.supportIdentifier) {
+      summary = formatTemplate(strings.sidebar.identityEmailUnavailableWithFallback, {
+        value: identity.supportIdentifier
+      });
+    }
+
+    document.getElementById('identitySummaryText').textContent = summary;
   }
 
   function persistPreferences() {
@@ -115,7 +158,9 @@
     var catalogRoot = document.getElementById('catalogRoot');
     var query = normalizeText(document.getElementById('searchInput').value);
     var currentTab = getCurrentTab_();
-    var mainItems = getItemsForTab_(currentTab).filter(function (item) {
+    var sourceItems = query ? state.bootstrap.catalog.items : getItemsForTab_(currentTab);
+    var sectionLabel = query ? strings.sidebar.searchLabel : currentTab.label;
+    var mainItems = sourceItems.filter(function (item) {
       return !query || item.searchText.indexOf(query) > -1;
     });
     var favoriteItems = getFavoriteItems_().filter(function (item) {
@@ -128,7 +173,7 @@
     }
 
     catalogRoot.innerHTML = [
-      mainItems.length ? renderGridSection_(currentTab.label, mainItems, false) : '',
+      mainItems.length ? renderGridSection_(sectionLabel, mainItems, false) : '',
       favoriteItems.length ? renderGridSection_(strings.sidebar.favorites, favoriteItems, true) : ''
     ].join('');
 
@@ -233,34 +278,51 @@
       spaceMode: document.getElementById('spaceModeSelect').value,
       presentationMode: document.getElementById('presentationModeSelect').value,
       applyPreferredFont: document.getElementById('fontToggle').checked,
+      skipRecentTracking: true,
       source: 'sidebar'
     };
 
     button.classList.add('is-working');
+    showStatus(state.bootstrap.strings.status.inserting, 'info');
 
+    window.setTimeout(function () {
+      google.script.run
+        .withSuccessHandler(function (result) {
+          button.classList.remove('is-working');
+
+          if (!result || !result.ok) {
+            showStatus(result && result.message ? result.message : state.bootstrap.strings.errors.unexpected, 'error');
+            return;
+          }
+
+          pulseCard(symbolId);
+          queueRecentSync(symbolId);
+          showStatus(result.message, 'success');
+        })
+        .withFailureHandler(function (error) {
+          button.classList.remove('is-working');
+          handleServerFailure(error);
+        })
+        .insertSymbolFromSidebar(payload);
+    }, 0);
+  }
+
+  function queueRecentSync(symbolId) {
     google.script.run
-      .withSuccessHandler(function (result) {
-        button.classList.remove('is-working');
-
-        if (!result || !result.ok) {
-          showStatus(result && result.message ? result.message : state.bootstrap.strings.errors.unexpected, 'error');
+      .withSuccessHandler(function (preferences) {
+        if (!preferences) {
           return;
         }
 
-        if (result.preferences) {
-          syncPreferences(result.preferences);
-          renderQuickAccess();
-          renderCatalog();
-        }
-
-        pulseCard(symbolId);
-        showStatus(result.message, 'success');
+        syncPreferences(preferences);
+        renderQuickAccess();
       })
-      .withFailureHandler(function (error) {
-        button.classList.remove('is-working');
-        handleServerFailure(error);
+      .withFailureHandler(function () {
+        /* Best effort only: recent history should not block insertion UX. */
       })
-      .insertSymbolFromSidebar(payload);
+      .recordRecentSymbolFromSidebar({
+        symbolId: symbolId
+      });
   }
 
   function toggleFavorite(symbolId, button) {
@@ -479,6 +541,12 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
+  }
+
+  function formatTemplate(text, values) {
+    return String(text || '').replace(/\{(\w+)\}/g, function (match, key) {
+      return Object.prototype.hasOwnProperty.call(values || {}, key) ? values[key] : match;
+    });
   }
 })();
 </script>

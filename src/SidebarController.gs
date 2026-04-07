@@ -10,13 +10,15 @@ var AstroSidebar = (function () {
   function getBootstrap(clientLocale) {
     var locale = AstroUtils.normalizeLocale(clientLocale || AstroUtils.getUserLocale());
     var preferences = AstroPreferences.getUserPreferences();
+    var identity = AstroIdentity.getCurrentIdentity();
 
     return {
       locale: locale,
       config: AstroConfig.getClientConfig(),
       strings: AstroI18n.getBundle(locale),
       catalog: AstroCatalog.getCatalog(locale, preferences),
-      preferences: preferences
+      preferences: preferences,
+      identity: identity
     };
   }
 

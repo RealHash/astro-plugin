@@ -48,6 +48,19 @@ function saveUserPreferencesFromSidebar(partial) {
   return AstroPreferences.updateUserPreferences(partial || {});
 }
 
+function recordRecentSymbolFromSidebar(payload) {
+  if (!payload || !payload.symbolId) {
+    return null;
+  }
+
+  var preferences = AstroPreferences.recordRecentSymbol(payload.symbolId);
+
+  return {
+    favorites: preferences.favorites,
+    recentSymbolIds: preferences.recentSymbolIds
+  };
+}
+
 function setFavoriteSymbolFromSidebar(payload) {
   var locale = AstroUtils.normalizeLocale(payload && payload.locale);
 

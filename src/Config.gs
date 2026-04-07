@@ -5,7 +5,12 @@ var AstroConfig = (function () {
       version: '0.1.0',
       sidebarTitle: 'Astro Symbols',
       quickInsertSymbolId: 'sun',
-      quickAccessSymbolIds: ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter']
+      quickAccessSymbolIds: ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter'],
+      legalLinks: {
+        support: 'https://astroaddon.productoindustrial.com/support/',
+        privacy: 'https://astroaddon.productoindustrial.com/privacy/',
+        terms: 'https://astroaddon.productoindustrial.com/terms/'
+      }
     },
     ui: {
       recentLimit: 6,
@@ -27,6 +32,7 @@ var AstroConfig = (function () {
     },
     storage: {
       userPreferencesKey: 'ASTRO_SYMBOLS_USER_PREFERENCES',
+      userIdentityKey: 'ASTRO_SYMBOLS_USER_IDENTITY',
       schemaVersion: 1
     },
     extensions: {

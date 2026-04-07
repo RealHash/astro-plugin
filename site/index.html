@@ -56,9 +56,9 @@
           </div>
           <div class="metric-grid" aria-label="Key facts">
             <div class="metric">
-              <div class="metric__value">2</div>
+              <div class="metric__value">3</div>
               <div class="metric__label">OAuth scopes</div>
-              <p>Only the Docs UI container and the currently open document.</p>
+              <p>The Docs UI container, the current document, and account email when Google exposes it.</p>
             </div>
             <div class="metric">
               <div class="metric__value">0</div>
@@ -102,7 +102,7 @@
           </div>
           <div class="feature-card">
             <h3>Stored preferences</h3>
-            <p>Per-user settings are stored through Google Apps Script™ <span class="mono">PropertiesService</span>, including favorites and recent symbols.</p>
+            <p>Per-user settings are stored through Google Apps Script™ <span class="mono">PropertiesService</span>, including favorites, recent symbols, and account identification metadata.</p>
           </div>
           <div class="feature-card">
             <h3>Supported languages</h3>
@@ -121,6 +121,10 @@
               <li>
                 <strong><span class="mono">documents.currentonly</span></strong>
                 Limited access to the open document so the add-on can insert content where the user asks.
+              </li>
+              <li>
+                <strong><span class="mono">userinfo.email</span></strong>
+                Used to identify the account for support and internal account administration when Google exposes the email in the authorized context.
               </li>
             </ul>
           </div>

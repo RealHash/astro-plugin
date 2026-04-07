@@ -195,8 +195,15 @@ En [`src/appsscript.json`](src/appsscript.json):
   Permite abrir la sidebar y menús dentro de Google Docs.
 - `https://www.googleapis.com/auth/documents.currentonly`
   Limita la escritura y lectura al documento abierto.
+- `https://www.googleapis.com/auth/userinfo.email`
+  Permite leer el email de la cuenta cuando Google lo expone en el contexto autorizado, para identificar al usuario en soporte y administración de cuenta.
 
 No se pide `drive.file`, ni scopes de Gmail, Drive o APIs externas porque este MVP no los necesita.
+
+Nota operativa:
+
+- la app intenta obtener el email del usuario con `Session.getActiveUser().getEmail()`;
+- en algunos contextos de Apps Script Google puede no devolverlo, así que la identificación debe tratarse como `best effort`, no como garantía absoluta.
 
 ## Flujo recomendado para equipo
 

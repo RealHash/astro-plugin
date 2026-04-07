@@ -39,6 +39,9 @@ Scopes actuales en [`src/appsscript.json`](/Users/pancho/Documents/Proyectos%20d
 
 - `https://www.googleapis.com/auth/script.container.ui`
 - `https://www.googleapis.com/auth/documents.currentonly`
+- `https://www.googleapis.com/auth/userinfo.email`
+
+Si usás `userinfo.email`, el sitio público, la privacy policy y el listing tienen que explicar con claridad el uso actual de ese dato. En este repo el uso actual queda limitado a identificación de cuenta para soporte y administración interna.
 
 Lo que Google te está marcando no parece ser un exceso de scopes en código, sino una desalineación entre:
 

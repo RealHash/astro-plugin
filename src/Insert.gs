@@ -14,6 +14,7 @@ var AstroInsert = (function () {
       spaceMode: payload.spaceMode,
       presentationMode: payload.presentationMode,
       applyPreferredFont: payload.applyPreferredFont,
+      skipRecentTracking: Boolean(payload.skipRecentTracking),
       source: payload.source || 'sidebar'
     });
   }
@@ -44,16 +45,20 @@ var AstroInsert = (function () {
         return buildErrorResult_(locale, 'errors.insertionFailed');
       }
 
-      var preferences = AstroPreferences.recordRecentSymbol(symbolId);
-
       result.ok = true;
       result.symbolId = symbolId;
       result.symbol = symbolEntry.symbol;
       result.insertedText = insertion.text;
-      result.preferences = {
-        favorites: preferences.favorites,
-        recentSymbolIds: preferences.recentSymbolIds
-      };
+
+      if (!options || !options.skipRecentTracking) {
+        var preferences = AstroPreferences.recordRecentSymbol(symbolId);
+
+        result.preferences = {
+          favorites: preferences.favorites,
+          recentSymbolIds: preferences.recentSymbolIds
+        };
+      }
+
       result.message = buildMessage_(locale, result.messageKey, result.fontStatus);
 
       return result;
